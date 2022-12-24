@@ -7,6 +7,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1918E0E2-6E7
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NukeBuildExtensions.AzurePipelines", "src\NukeBuildExtensions.AzurePipelines\NukeBuildExtensions.AzurePipelines.csproj", "{2DC6B606-68BD-4311-A361-5E8FA562E5E4}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", "build\_build.csproj", "{6613A027-8B6D-46FC-94AC-E6310CF74E61}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -16,6 +18,8 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6613A027-8B6D-46FC-94AC-E6310CF74E61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6613A027-8B6D-46FC-94AC-E6310CF74E61}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2DC6B606-68BD-4311-A361-5E8FA562E5E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2DC6B606-68BD-4311-A361-5E8FA562E5E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2DC6B606-68BD-4311-A361-5E8FA562E5E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
