@@ -13,6 +13,7 @@ using static Nuke.Common.EnvironmentInfo;
 using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.IO.PathConstruction;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
+using Nuke.Common.Tools.GitVersion;
 
 [GitHubActions(
     "continuous",
@@ -40,10 +41,15 @@ class Build : NukeBuild
 
     [Solution(GenerateProjects = true)] readonly Solution Solution;
 
+    AbsolutePath OutputDirectory => RootDirectory / "output";
+    AbsolutePath ArtifactsDirectory => RootDirectory / "artifacts";
+
     Target Clean => _ => _
         .Before(Restore)
         .Executes(() =>
         {
+            EnsureCleanDirectory(OutputDirectory);
+            EnsureCleanDirectory(ArtifactsDirectory);
         });
 
     Target Restore => _ => _
@@ -57,6 +63,14 @@ class Build : NukeBuild
         .DependsOn(Restore)
         .Executes(() =>
         {
+            DotNetBuild(s => s
+                .SetProjectFile(Solution)
+                .SetOutputDirectory(OutputDirectory)
+                .SetConfiguration(Configuration)
+                //.SetAssemblyVersion(GitVersion.AssemblySemVer)
+                //.SetFileVersion(GitVersion.AssemblySemFileVer)
+                //.SetInformationalVersion(GitVersion.InformationalVersion)
+                .EnableNoRestore());
         });
 
 }
