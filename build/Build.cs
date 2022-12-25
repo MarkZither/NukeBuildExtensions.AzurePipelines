@@ -13,7 +13,9 @@ using static Nuke.Common.EnvironmentInfo;
 using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.IO.PathConstruction;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
-using Nuke.Common.Tools.GitVersion;
+using Nuke.Common.Tools.NerdbankGitVersioning;
+using Serilog;
+using System.IO;
 
 [GitHubActions(
     "continuous",
@@ -40,6 +42,7 @@ class Build : NukeBuild
     readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
 
     [Solution(GenerateProjects = true)] readonly Solution Solution;
+    [NerdbankGitVersioning][Required] NerdbankGitVersioning Versioning;
 
     AbsolutePath OutputDirectory => RootDirectory / "output";
     AbsolutePath ArtifactsDirectory => RootDirectory / "artifacts";
@@ -61,15 +64,16 @@ class Build : NukeBuild
 
     Target Compile => _ => _
         .DependsOn(Restore)
-        .Executes(() =>
-        {
+    .Executes(() =>
+    {
+            Log.Information("Version is {Versioning} on commit {GitCommit}", Versioning.Version, Versioning.GitCommitId);
             DotNetBuild(s => s
                 .SetProjectFile(Solution)
                 .SetOutputDirectory(OutputDirectory)
                 .SetConfiguration(Configuration)
-                //.SetAssemblyVersion(GitVersion.AssemblySemVer)
-                //.SetFileVersion(GitVersion.AssemblySemFileVer)
-                //.SetInformationalVersion(GitVersion.InformationalVersion)
+                .SetAssemblyVersion(Versioning.AssemblyVersion)
+                .SetFileVersion(Versioning.AssemblyFileVersion)
+                .SetInformationalVersion(Versioning.AssemblyInformationalVersion)
                 .EnableNoRestore());
         });
 
