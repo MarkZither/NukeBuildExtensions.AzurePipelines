@@ -43,9 +43,11 @@ using NukeBuildExtensions.AzurePipelines;
 		//},
         InvokedTargets = new[] { nameof(Compile) })]
 [AzurePipelinesExtended("NugetAuth",
-        AzurePipelinesImage.UbuntuLatest,
+        AzurePipelinesImage.UbuntuLatest, 
+        AzurePipelinesImage.WindowsLatest,
         NuGetAuthenticate = true,
         //AzurePipelinesImage.WindowsLatest,
+        UseOnPremAgentPool = false,
         FetchDepth = 0,
         AutoGenerate = true,
         //CachePaths = new[]
@@ -53,6 +55,20 @@ using NukeBuildExtensions.AzurePipelines;
         //        AzurePipelinesCachePaths.Nuke,
 				//AzurePipelinesCachePaths.NuGet
 		//},
+        InvokedTargets = new[] { nameof(Compile) })]
+[AzurePipelinesExtended("OnPremAgentPool",
+        AzurePipelinesImage.WindowsLatest,
+        NuGetAuthenticate = true,
+        //AzurePipelinesImage.WindowsLatest,
+        UseOnPremAgentPool = true,
+        OnPremAgentPool = "MyOnPremAgentPool",
+        FetchDepth = 0,
+        AutoGenerate = true,
+        //CachePaths = new[]
+        //{
+        //        AzurePipelinesCachePaths.Nuke,
+        //AzurePipelinesCachePaths.NuGet
+        //},
         InvokedTargets = new[] { nameof(Compile) })]
 
 class Build : NukeBuild

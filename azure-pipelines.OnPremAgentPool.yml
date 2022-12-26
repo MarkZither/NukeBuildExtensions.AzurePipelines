@@ -9,67 +9,16 @@
 #
 #     - To trigger manual generation invoke:
 #
-#         nuke --generate-configuration AzurePipelines_NugetAuth --host AzurePipelines
+#         nuke --generate-configuration AzurePipelines_OnPremAgentPool --host AzurePipelines
 #
 # </auto-generated>
 # ------------------------------------------------------------------------------
 
 stages:
-  - stage: ubuntu_latest
-    displayName: 'ubuntu-latest'
-    dependsOn: [  ]
-    pool:
-      vmImage: 'ubuntu-latest'
-    jobs:
-      - job: Restore
-        displayName: 'Restore'
-        dependsOn: [  ]
-        steps:
-          - task: NuGetAuthenticate@1
-          - checkout: self
-            fetchDepth: 0
-          - task: Cache@2
-            displayName: Cache (nuke-temp)
-            inputs:
-              key: $(Agent.OS) | nuke-temp | **/global.json, **/*.csproj
-              restoreKeys: $(Agent.OS) | nuke-temp
-              path: .nuke/temp
-          - task: Cache@2
-            displayName: Cache (nuget-packages)
-            inputs:
-              key: $(Agent.OS) | nuget-packages | **/global.json, **/*.csproj
-              restoreKeys: $(Agent.OS) | nuget-packages
-              path: $(HOME)/.nuget/packages
-          - task: CmdLine@2
-            inputs:
-              script: './build.cmd Restore --skip'
-      - job: Compile
-        displayName: 'Compile'
-        dependsOn: [ Restore ]
-        steps:
-          - task: NuGetAuthenticate@1
-          - checkout: self
-            fetchDepth: 0
-          - task: Cache@2
-            displayName: Cache (nuke-temp)
-            inputs:
-              key: $(Agent.OS) | nuke-temp | **/global.json, **/*.csproj
-              restoreKeys: $(Agent.OS) | nuke-temp
-              path: .nuke/temp
-          - task: Cache@2
-            displayName: Cache (nuget-packages)
-            inputs:
-              key: $(Agent.OS) | nuget-packages | **/global.json, **/*.csproj
-              restoreKeys: $(Agent.OS) | nuget-packages
-              path: $(HOME)/.nuget/packages
-          - task: CmdLine@2
-            inputs:
-              script: './build.cmd Compile --skip'
   - stage: windows_latest
     displayName: 'windows-latest'
     dependsOn: [  ]
-    pool:
-      vmImage: 'windows-latest'
+    pool: 'MyOnPremAgentPool'
     jobs:
       - job: Restore
         displayName: 'Restore'
