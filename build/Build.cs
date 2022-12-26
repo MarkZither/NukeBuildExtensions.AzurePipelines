@@ -24,7 +24,7 @@ using NukeBuildExtensions.AzurePipelines;
     GitHubActionsImage.UbuntuLatest,
     FetchDepth = 0, // fetch depth = 0 for versioning https://github.com/dotnet/Nerdbank.GitVersioning/blob/main/doc/cloudbuild.md#github-actions
     On = new[] { GitHubActionsTrigger.Push },
-    InvokedTargets = new[] { nameof(Compile) })]
+    InvokedTargets = new[] { nameof(Pack) })]
 [GitHubActions(
     "publish",
     GitHubActionsImage.UbuntuLatest,
