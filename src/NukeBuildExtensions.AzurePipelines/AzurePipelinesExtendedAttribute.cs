@@ -29,7 +29,7 @@ namespace NukeBuildExtensions.AzurePipelines
 
         public bool NuGetAuthenticate { get; set; }
         public bool UseOnPremAgentPool { get; set; }
-        public string OnPremAgentPool { get; set; }
+        public string OnPremAgentPool { get; set; } = string.Empty;
         protected override IEnumerable<AzurePipelinesStep> GetSteps(ExecutableTarget executableTarget, IReadOnlyCollection<ExecutableTarget> relevantTargets, AzurePipelinesImage image)
         {
             if (NuGetAuthenticate)

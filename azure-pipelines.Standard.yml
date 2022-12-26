@@ -42,6 +42,8 @@ stages:
           - task: CmdLine@2
             inputs:
               script: './build.cmd Clean --skip'
+            env:
+              NuGetApiKey: $(NuGetApiKey)
       - job: Restore
         displayName: 'Restore'
         dependsOn: [ Clean ]
@@ -63,6 +65,8 @@ stages:
           - task: CmdLine@2
             inputs:
               script: './build.cmd Restore --skip'
+            env:
+              NuGetApiKey: $(NuGetApiKey)
       - job: Compile
         displayName: 'Compile'
         dependsOn: [ Restore ]
@@ -84,3 +88,5 @@ stages:
           - task: CmdLine@2
             inputs:
               script: './build.cmd Compile --skip'
+            env:
+              NuGetApiKey: $(NuGetApiKey)

@@ -7,7 +7,23 @@
     <Nullable>enable</Nullable>
     <AssemblyName>MarkZither.NukeBuildExtensions.AzurePipelines</AssemblyName>
     <RootNamespace>MarkZither.NukeBuildExtensions.AzurePipelines</RootNamespace>
+    <Description>Extensions to the Nuke build AzurePipelines CI/CD to support on premise build agents and native nuget authentiation</Description>
+    <PackageProjectUrl>https://github.com/MarkZither/NukeBuildExtensions.AzurePipelines</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/MarkZither/NukeBuildExtensions.AzurePipelines</RepositoryUrl>
+    <PackageTags>nuke build automation</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <IncludeSymbols>True</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="all" />

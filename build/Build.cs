@@ -30,7 +30,8 @@ using NukeBuildExtensions.AzurePipelines;
     GitHubActionsImage.UbuntuLatest,
     FetchDepth = 0,
     OnPullRequestBranches = new[] { "main" },
-    InvokedTargets = new[] { nameof(Compile) })]
+    InvokedTargets = new[] { nameof(publish) },
+    ImportSecrets = new[] { nameof(NuGetApiKey) })]
 [AzurePipelines("Standard",
         AzurePipelinesImage.UbuntuLatest,
         //AzurePipelinesImage.WindowsLatest,
@@ -41,7 +42,8 @@ using NukeBuildExtensions.AzurePipelines;
         //        AzurePipelinesCachePaths.Nuke,
 				//AzurePipelinesCachePaths.NuGet
 		//},
-        InvokedTargets = new[] { nameof(Compile) })]
+        InvokedTargets = new[] { nameof(Pack) },
+        ImportSecrets = new[] { nameof(NuGetApiKey) })]
 [AzurePipelinesExtended("NugetAuth",
         AzurePipelinesImage.UbuntuLatest, 
         AzurePipelinesImage.WindowsLatest,
@@ -68,7 +70,8 @@ using NukeBuildExtensions.AzurePipelines;
         //        AzurePipelinesCachePaths.Nuke,
         //AzurePipelinesCachePaths.NuGet
         //},
-        InvokedTargets = new[] { nameof(Compile) })]
+        InvokedTargets = new[] { nameof(Compile) },
+        ImportSecrets = new[] { nameof(NuGetApiKey) })]
 
 class Build : NukeBuild
 {
@@ -85,6 +88,8 @@ class Build : NukeBuild
 
     [Solution(GenerateProjects = true)] readonly Solution Solution;
     [NerdbankGitVersioning][Required] NerdbankGitVersioning Versioning;
+    [Parameter] [Secret] readonly string NuGetApiKey;
+    [Parameter] readonly string NuGetSource = "https://api.nuget.org/v3/index.json";
 
     AbsolutePath OutputDirectory => RootDirectory / "output";
     AbsolutePath ArtifactsDirectory => RootDirectory / "artifacts";
@@ -125,6 +130,7 @@ class Build : NukeBuild
 
     Target Pack => _ => _
         .DependsOn(Compile)
+        .Produces(PackagesDirectory / "*.nupkg")
     .Executes(() =>
     {
 
@@ -137,6 +143,20 @@ class Build : NukeBuild
             .SetVersion(Versioning.NuGetPackageVersion)
             .SetDeterministicSourcePaths(true)
             .SetIncludeSymbols(true)
+            .SetSymbolPackageFormat(DotNetSymbolPackageFormat.snupkg)
             .SetPackageReleaseNotes(NuGetReleaseNotes));
     });
+
+    Target Publish => _ => _
+        .After(Pack)
+        .Consumes(Pack)
+        .Requires(() => NuGetSource)
+        .Requires(() => NuGetApiKey)
+        .Executes(() =>
+        {
+            DotNetNuGetPush(s => s
+                .SetTargetPath(PackagesDirectory / "*.nupkg")
+                .SetSource(NuGetSource)
+                .SetApiKey(NuGetApiKey));
+        });
 }
