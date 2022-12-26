@@ -16,6 +16,8 @@ using static Nuke.Common.Tools.DotNet.DotNetTasks;
 using Nuke.Common.Tools.NerdbankGitVersioning;
 using Serilog;
 using System.IO;
+using Nuke.Common.CI.AzurePipelines;
+using NukeBuildExtensions.AzurePipelines;
 
 [GitHubActions(
     "continuous",
@@ -29,6 +31,29 @@ using System.IO;
     FetchDepth = 0,
     OnPullRequestBranches = new[] { "main" },
     InvokedTargets = new[] { nameof(Compile) })]
+[AzurePipelines("Standard",
+        AzurePipelinesImage.UbuntuLatest,
+        //AzurePipelinesImage.WindowsLatest,
+        FetchDepth = 0, // fetch depth = 0 for versioning https://github.com/dotnet/Nerdbank.GitVersioning/blob/main/doc/cloudbuild.md#azure-pipelines
+        AutoGenerate = true,
+        //CachePaths = new[]
+        //{
+        //        AzurePipelinesCachePaths.Nuke,
+				//AzurePipelinesCachePaths.NuGet
+		//},
+        InvokedTargets = new[] { nameof(Compile) })]
+[AzurePipelinesExtended("NugetAuth",
+        AzurePipelinesImage.UbuntuLatest,
+        NuGetAuthenticate = true,
+        //AzurePipelinesImage.WindowsLatest,
+        FetchDepth = 0,
+        AutoGenerate = true,
+        //CachePaths = new[]
+        //{
+        //        AzurePipelinesCachePaths.Nuke,
+				//AzurePipelinesCachePaths.NuGet
+		//},
+        InvokedTargets = new[] { nameof(Compile) })]
 
 class Build : NukeBuild
 {
