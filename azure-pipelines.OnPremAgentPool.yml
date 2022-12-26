@@ -20,9 +20,31 @@ stages:
     dependsOn: [  ]
     pool: 'MyOnPremAgentPool'
     jobs:
+      - job: Clean
+        displayName: 'Clean'
+        dependsOn: [  ]
+        steps:
+          - task: NuGetAuthenticate@1
+          - checkout: self
+            fetchDepth: 0
+          - task: Cache@2
+            displayName: Cache (nuke-temp)
+            inputs:
+              key: $(Agent.OS) | nuke-temp | **/global.json, **/*.csproj
+              restoreKeys: $(Agent.OS) | nuke-temp
+              path: .nuke/temp
+          - task: Cache@2
+            displayName: Cache (nuget-packages)
+            inputs:
+              key: $(Agent.OS) | nuget-packages | **/global.json, **/*.csproj
+              restoreKeys: $(Agent.OS) | nuget-packages
+              path: $(USERPROFILE)/.nuget/packages
+          - task: CmdLine@2
+            inputs:
+              script: './build.cmd Clean --skip'
       - job: Restore
         displayName: 'Restore'
-        dependsOn: [  ]
+        dependsOn: [ Clean ]
         steps:
           - task: NuGetAuthenticate@1
           - checkout: self

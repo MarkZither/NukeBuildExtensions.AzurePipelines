@@ -96,9 +96,11 @@ class Build : NukeBuild
         {
             EnsureCleanDirectory(OutputDirectory);
             EnsureCleanDirectory(ArtifactsDirectory);
+            EnsureCleanDirectory(PackagesDirectory);
         });
 
     Target Restore => _ => _
+        .DependsOn(Clean)
         .Executes(() =>
         {
             DotNetRestore(s => s
@@ -114,6 +116,7 @@ class Build : NukeBuild
             .SetProjectFile(Solution)
             .SetOutputDirectory(OutputDirectory)
             .SetConfiguration(Configuration)
+            .SetDeterministic(true)
             .SetAssemblyVersion(Versioning.AssemblyVersion)
             .SetFileVersion(Versioning.AssemblyFileVersion)
             .SetInformationalVersion(Versioning.AssemblyInformationalVersion)
@@ -132,6 +135,8 @@ class Build : NukeBuild
             .SetNoBuild(SucceededTargets.Contains(Compile))
             .SetOutputDirectory(PackagesDirectory)
             .SetVersion(Versioning.NuGetPackageVersion)
+            .SetDeterministicSourcePaths(true)
+            .SetIncludeSymbols(true)
             .SetPackageReleaseNotes(NuGetReleaseNotes));
     });
 }
