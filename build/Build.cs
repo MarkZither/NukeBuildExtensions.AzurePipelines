@@ -30,7 +30,7 @@ using NukeBuildExtensions.AzurePipelines;
     GitHubActionsImage.UbuntuLatest,
     FetchDepth = 0,
     OnPullRequestBranches = new[] { "main" },
-    InvokedTargets = new[] { nameof(publish) },
+    InvokedTargets = new[] { nameof(Publish) },
     ImportSecrets = new[] { nameof(NuGetApiKey) })]
 [AzurePipelines("Standard",
         AzurePipelinesImage.UbuntuLatest,

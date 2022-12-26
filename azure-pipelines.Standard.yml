@@ -90,3 +90,30 @@ stages:
               script: './build.cmd Compile --skip'
             env:
               NuGetApiKey: $(NuGetApiKey)
+      - job: Pack
+        displayName: 'Pack'
+        dependsOn: [ Compile ]
+        steps:
+          - checkout: self
+            fetchDepth: 0
+          - task: Cache@2
+            displayName: Cache (nuke-temp)
+            inputs:
+              key: $(Agent.OS) | nuke-temp | **/global.json, **/*.csproj
+              restoreKeys: $(Agent.OS) | nuke-temp
+              path: .nuke/temp
+          - task: Cache@2
+            displayName: Cache (nuget-packages)
+            inputs:
+              key: $(Agent.OS) | nuget-packages | **/global.json, **/*.csproj
+              restoreKeys: $(Agent.OS) | nuget-packages
+              path: $(HOME)/.nuget/packages
+          - task: CmdLine@2
+            inputs:
+              script: './build.cmd Pack --skip'
+            env:
+              NuGetApiKey: $(NuGetApiKey)
+          - task: PublishBuildArtifacts@1
+            inputs:
+              artifactName: packages
+              pathtoPublish: 'packages'
