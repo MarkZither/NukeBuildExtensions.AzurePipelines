@@ -59,7 +59,6 @@ using NukeBuildExtensions.AzurePipelines;
 [AzurePipelinesExtended("OnPremAgentPool",
         AzurePipelinesImage.WindowsLatest,
         NuGetAuthenticate = true,
-        //AzurePipelinesImage.WindowsLatest,
         UseOnPremAgentPool = true,
         OnPremAgentPool = "MyOnPremAgentPool",
         FetchDepth = 0,
@@ -89,6 +88,7 @@ class Build : NukeBuild
 
     AbsolutePath OutputDirectory => RootDirectory / "output";
     AbsolutePath ArtifactsDirectory => RootDirectory / "artifacts";
+    AbsolutePath PackagesDirectory => RootDirectory / "packages";
 
     Target Clean => _ => _
         .Before(Restore)
@@ -109,15 +109,29 @@ class Build : NukeBuild
         .DependsOn(Restore)
     .Executes(() =>
     {
-            Log.Information("Version is {Versioning} on commit {GitCommit}", Versioning.Version, Versioning.GitCommitId);
-            DotNetBuild(s => s
-                .SetProjectFile(Solution)
-                .SetOutputDirectory(OutputDirectory)
-                .SetConfiguration(Configuration)
-                .SetAssemblyVersion(Versioning.AssemblyVersion)
-                .SetFileVersion(Versioning.AssemblyFileVersion)
-                .SetInformationalVersion(Versioning.AssemblyInformationalVersion)
-                .EnableNoRestore());
-        });
+        Log.Information("Version is {Versioning} on commit {GitCommit}", Versioning.Version, Versioning.GitCommitId);
+        DotNetBuild(s => s
+            .SetProjectFile(Solution)
+            .SetOutputDirectory(OutputDirectory)
+            .SetConfiguration(Configuration)
+            .SetAssemblyVersion(Versioning.AssemblyVersion)
+            .SetFileVersion(Versioning.AssemblyFileVersion)
+            .SetInformationalVersion(Versioning.AssemblyInformationalVersion)
+            .EnableNoRestore());
+     });
 
+    Target Pack => _ => _
+        .DependsOn(Compile)
+    .Executes(() =>
+    {
+
+        string NuGetReleaseNotes = "First release";
+        DotNetPack(s => s
+            .SetProject(Solution)
+            .SetConfiguration(Configuration)
+            .SetNoBuild(SucceededTargets.Contains(Compile))
+            .SetOutputDirectory(PackagesDirectory)
+            .SetVersion(Versioning.NuGetPackageVersion)
+            .SetPackageReleaseNotes(NuGetReleaseNotes));
+    });
 }
