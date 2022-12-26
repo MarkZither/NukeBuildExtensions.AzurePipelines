@@ -114,6 +114,7 @@ class Build : NukeBuild
 
     Target Compile => _ => _
         .DependsOn(Restore)
+        .Produces(OutputDirectory)
     .Executes(() =>
     {
         Log.Information("Version is {Versioning} on commit {GitCommit}", Versioning.Version, Versioning.GitCommitId);
@@ -130,10 +131,10 @@ class Build : NukeBuild
 
     Target Pack => _ => _
         .DependsOn(Compile)
+        .Consumes(Compile)
         .Produces(PackagesDirectory / "*.nupkg")
     .Executes(() =>
     {
-
         string NuGetReleaseNotes = "First release";
         DotNetPack(s => s
             .SetProject(Solution)

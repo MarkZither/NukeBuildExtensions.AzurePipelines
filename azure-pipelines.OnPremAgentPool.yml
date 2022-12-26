@@ -92,3 +92,7 @@ stages:
               script: './build.cmd Compile --skip'
             env:
               NuGetApiKey: $(NuGetApiKey)
+          - task: PublishBuildArtifacts@1
+            inputs:
+              artifactName: output
+              pathtoPublish: 'output'

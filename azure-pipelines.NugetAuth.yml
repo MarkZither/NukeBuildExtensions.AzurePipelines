@@ -87,6 +87,10 @@ stages:
           - task: CmdLine@2
             inputs:
               script: './build.cmd Compile --skip'
+          - task: PublishBuildArtifacts@1
+            inputs:
+              artifactName: output
+              pathtoPublish: 'output'
   - stage: windows_latest
     displayName: 'windows-latest'
     dependsOn: [  ]
@@ -159,3 +163,7 @@ stages:
           - task: CmdLine@2
             inputs:
               script: './build.cmd Compile --skip'
+          - task: PublishBuildArtifacts@1
+            inputs:
+              artifactName: output
+              pathtoPublish: 'output'
