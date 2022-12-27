@@ -114,13 +114,11 @@ class Build : NukeBuild
 
     Target Compile => _ => _
         .DependsOn(Restore)
-        .Produces(OutputDirectory)
     .Executes(() =>
     {
         Log.Information("Version is {Versioning} on commit {GitCommit}", Versioning.Version, Versioning.GitCommitId);
         DotNetBuild(s => s
             .SetProjectFile(Solution)
-            .SetOutputDirectory(OutputDirectory)
             .SetConfiguration(Configuration)
             .SetDeterministic(true)
             .SetAssemblyVersion(Versioning.AssemblyVersion)
@@ -137,7 +135,7 @@ class Build : NukeBuild
     {
         string NuGetReleaseNotes = "First release";
         DotNetPack(s => s
-            .SetProject(Solution)
+            .SetProject(RootDirectory / "src" / "NukeBuildExtensions.AzurePipelines" / "NukeBuildExtensions.AzurePipelines.csproj")
             .SetConfiguration(Configuration)
             .SetNoBuild(SucceededTargets.Contains(Compile))
             .SetOutputDirectory(PackagesDirectory)
