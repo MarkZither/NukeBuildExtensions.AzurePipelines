@@ -11,3 +11,14 @@
         InvokedTargets = new[] { nameof(Compile) })]
 ```
 
+## Runing pipelines on on-premises agent pools
+
+``` csharp
+[AzurePipelinesExtended("OnPremAgentPool",
+        AzurePipelinesImage.WindowsLatest, // this is redundant
+        UseOnPremAgentPool = true,
+        OnPremAgentPool = "MyOnPremAgentPool",
+        AutoGenerate = true,
+        InvokedTargets = new[] { nameof(Compile) })]
+```
+
