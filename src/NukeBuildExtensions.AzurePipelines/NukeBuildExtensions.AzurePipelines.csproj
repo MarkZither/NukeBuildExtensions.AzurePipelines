@@ -1,14 +1,32 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <AssemblyName>MarkZither.NukeBuildExtensions.AzurePipelines</AssemblyName>
+    <RootNamespace>MarkZither.NukeBuildExtensions.AzurePipelines</RootNamespace>
+    <Description>Extensions to the Nuke build AzurePipelines CI/CD to support on-premises build agents and native nuget authentiation</Description>
+    <PackageProjectUrl>https://github.com/MarkZither/NukeBuildExtensions.AzurePipelines</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/MarkZither/NukeBuildExtensions.AzurePipelines</RepositoryUrl>
+    <PackageTags>nuke build automation</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <IncludeSymbols>True</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="all" />
-    <PackageReference Include="Nuke.Common" Version="6.0.0" />
+    <PackageReference Include="Nuke.Common" Version="[6.3.0,7.0.0)" />
   </ItemGroup>
 </Project>
