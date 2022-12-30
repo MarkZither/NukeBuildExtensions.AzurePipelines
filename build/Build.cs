@@ -29,7 +29,7 @@ using NukeBuildExtensions.AzurePipelines;
     "publish",
     GitHubActionsImage.UbuntuLatest,
     FetchDepth = 0,
-    OnPullRequestBranches = new[] { "main" },
+    OnPushTags = new[] { "main" },
     InvokedTargets = new[] { nameof(Publish) },
     ImportSecrets = new[] { nameof(NuGetApiKey) })]
 [AzurePipelines("Standard",
