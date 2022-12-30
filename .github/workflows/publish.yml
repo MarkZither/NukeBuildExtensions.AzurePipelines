@@ -17,8 +17,8 @@
 name: publish
 
 on:
-  pull_request:
-    branches:
+  push:
+    tags:
       - main
 
 jobs:
